@@ -1,0 +1,105 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "stocks-df"
+		},
+		"db_ls_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'db_ls'"
+		},
+		"sf_ls_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'sf_ls'"
+		},
+		"LS_ApiCountries_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://www.apicountries.com/"
+		},
+		"db_ls_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1130-190835-wa24cnwg"
+		},
+		"marketstack_ls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.marketstack.com/v2/"
+		},
+		"sf_ls_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "GOLD"
+		},
+		"sf_ls_properties_typeProperties_role": {
+			"type": "string",
+			"defaultValue": "ACCOUNTADMIN"
+		},
+		"sf_ls_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "KUWUDZZ-NU62337.snowflakecomputing.com"
+		},
+		"stocks_sg_ls_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://stockssg.blob.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "stocks-df_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"db_ls_accessToken": {
+						"value": "[parameters('db_ls_accessToken')]"
+					},
+					"sf_ls_password": {
+						"value": "[parameters('sf_ls_password')]"
+					},
+					"LS_ApiCountries_properties_typeProperties_url": {
+						"value": "[parameters('LS_ApiCountries_properties_typeProperties_url')]"
+					},
+					"db_ls_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('db_ls_properties_typeProperties_existingClusterId')]"
+					},
+					"marketstack_ls_properties_typeProperties_url": {
+						"value": "[parameters('marketstack_ls_properties_typeProperties_url')]"
+					},
+					"sf_ls_properties_typeProperties_database": {
+						"value": "[parameters('sf_ls_properties_typeProperties_database')]"
+					},
+					"sf_ls_properties_typeProperties_role": {
+						"value": "[parameters('sf_ls_properties_typeProperties_role')]"
+					},
+					"sf_ls_properties_typeProperties_host": {
+						"value": "[parameters('sf_ls_properties_typeProperties_host')]"
+					},
+					"stocks_sg_ls_properties_typeProperties_serviceEndpoint": {
+						"value": "[parameters('stocks_sg_ls_properties_typeProperties_serviceEndpoint')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

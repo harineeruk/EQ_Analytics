@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "stocks-df"
+		},
+		"db_ls_accessToken": {
+			"value": ""
+		},
+		"sf_ls_password": {
+			"value": ""
+		},
+		"LS_ApiCountries_properties_typeProperties_url": {
+			"value": "https://www.apicountries.com/"
+		},
+		"db_ls_properties_typeProperties_existingClusterId": {
+			"value": "1130-190835-wa24cnwg"
+		},
+		"marketstack_ls_properties_typeProperties_url": {
+			"value": "http://api.marketstack.com/v2/"
+		},
+		"sf_ls_properties_typeProperties_database": {
+			"value": "GOLD"
+		},
+		"sf_ls_properties_typeProperties_role": {
+			"value": "ACCOUNTADMIN"
+		},
+		"sf_ls_properties_typeProperties_host": {
+			"value": "KUWUDZZ-NU62337.snowflakecomputing.com"
+		},
+		"stocks_sg_ls_properties_typeProperties_serviceEndpoint": {
+			"value": "https://stockssg.blob.core.windows.net/"
+		}
+	}
+}

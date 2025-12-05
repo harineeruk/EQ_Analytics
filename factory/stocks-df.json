@@ -1,0 +1,9 @@
+{
+	"name": "stocks-df",
+	"location": "swedencentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "85b5af89-13c4-4531-b3a4-d31b3fca0a3d",
+		"tenantId": "213a09d4-7fa0-4b4c-ab3f-f775fe1ea098"
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"name": "MarkettoBlob_ds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "stocks_sg_ls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"container": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().container",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

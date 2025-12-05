@@ -1,0 +1,30 @@
+{
+	"name": "snowflake_upload",
+	"properties": {
+		"activities": [
+			{
+				"name": "snowflake_upload_notebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Shared/Snowflake_upload"
+				},
+				"linkedServiceName": {
+					"referenceName": "db_ls",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-12-01T17:09:13Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

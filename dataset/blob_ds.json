@@ -1,5 +1,5 @@
 {
-	"name": "currencies_raw",
+	"name": "blob_ds",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "stocks_sg_ls",

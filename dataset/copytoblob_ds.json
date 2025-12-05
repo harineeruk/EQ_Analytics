@@ -1,5 +1,5 @@
 {
-	"name": "MarkettoBlob_ds",
+	"name": "copytoblob_ds",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "stocks_sg_ls",
@@ -18,10 +18,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().filename",
-					"type": "Expression"
-				},
 				"container": {
 					"value": "@dataset().container",
 					"type": "Expression"

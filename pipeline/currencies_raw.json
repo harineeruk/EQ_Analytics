@@ -44,8 +44,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "copytoblob_ds",
-						"type": "DatasetReference"
+						"referenceName": "currencies_raw",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "countryraw"
+						}
 					}
 				]
 			}

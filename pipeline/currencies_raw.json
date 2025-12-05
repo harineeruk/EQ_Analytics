@@ -1,9 +1,9 @@
 {
-	"name": "market_to_blob_pipe",
+	"name": "currencies_raw",
 	"properties": {
 		"activities": [
 			{
-				"name": "marketapi",
+				"name": "copy_currencies",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,12 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "RestSource",
-						"httpRequestTimeout": "00:01:40",
-						"requestInterval": "00.00:00:00.010",
-						"requestMethod": "GET",
-						"paginationRules": {
-							"supportRFC5988": "true"
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
 						}
 					},
 					"sink": {
@@ -37,27 +38,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "MarketStack_DS",
-						"type": "DatasetReference",
-						"parameters": {
-							"symbol": "GOOGL"
-						}
+						"referenceName": "currencies_ds",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "copytoblob_ds",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "raw",
-							"filename": "googlepast"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2025-11-29T17:45:30Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }

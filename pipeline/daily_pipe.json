@@ -46,7 +46,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "MarkettoBlob_ds",
+						"referenceName": "copytoblob_ds",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": "raw",

@@ -1,5 +1,5 @@
 {
-	"name": "countries_ds",
+	"name": "currencies_ds",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ApiCountries",

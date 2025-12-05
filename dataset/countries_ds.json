@@ -1,0 +1,18 @@
+{
+	"name": "countries_ds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ApiCountries",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/countries"
+			}
+		},
+		"schema": {}
+	}
+}

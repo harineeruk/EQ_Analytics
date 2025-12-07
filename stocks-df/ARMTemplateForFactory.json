@@ -49,6 +49,75 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/currencies_raw')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_currencies",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "currencies_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "blob_ds",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": "countryraw",
+									"fileName": "coutryraw2"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/currencies_ds')]",
+				"[concat(variables('factoryId'), '/datasets/blob_ds')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/daily_pipe')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -98,7 +167,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "MarkettoBlob_ds",
+								"referenceName": "copytoblob_ds",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": "raw",
@@ -119,7 +188,78 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/MarketStack_DS')]",
-				"[concat(variables('factoryId'), '/datasets/MarkettoBlob_ds')]"
+				"[concat(variables('factoryId'), '/datasets/copytoblob_ds')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/exchanges')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "exchange_cd",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "exchanges_ds",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "blob_ds",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": "exchangeraw",
+									"fileName": {
+										"value": "@concat('Exchanges', formatDateTime(addDays(utcNow(), -1), 'yyyyMMdd'), '.json')\n",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/exchanges_ds')]",
+				"[concat(variables('factoryId'), '/datasets/blob_ds')]"
 			]
 		},
 		{
@@ -172,7 +312,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "MarkettoBlob_ds",
+								"referenceName": "copytoblob_ds",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": "raw",
@@ -190,7 +330,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/MarketStack_DS')]",
-				"[concat(variables('factoryId'), '/datasets/MarkettoBlob_ds')]"
+				"[concat(variables('factoryId'), '/datasets/copytoblob_ds')]"
 			]
 		},
 		{
@@ -259,7 +399,45 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MarkettoBlob_ds')]",
+			"name": "[concat(parameters('factoryName'), '/blob_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "stocks_sg_ls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/stocks_sg_ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/copytoblob_ds')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -280,10 +458,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
 						"container": {
 							"value": "@dataset().container",
 							"type": "Expression"
@@ -297,7 +471,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/countries_ds')]",
+			"name": "[concat(parameters('factoryName'), '/currencies_ds')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -317,6 +491,29 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_ApiCountries')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/exchanges_ds')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "marketstack_ls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "exchanges?access_key=49f2a298972e670edc6efd04e2607aca&limit=1000",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/marketstack_ls')]"
 			]
 		},
 		{
@@ -424,18 +621,6 @@
 					"serviceEndpoint": "[parameters('stocks_sg_ls_properties_typeProperties_serviceEndpoint')]",
 					"accountKind": "StorageV2"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		}
